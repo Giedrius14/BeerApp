@@ -36,31 +36,51 @@ public class BeerAppApplication implements CommandLineRunner{
 	@Override
 	public void run(String... strings) throws Exception {
 
-/*		log.info("Beer Result :"+beerRepository.findOne(1L));
-		log.info("Brewery Result :"+breweryRepository.findOne(1L));
-		log.info("Category Result :"+categoryRepository.findOne(1L));
-		log.info("Beer Result :"+styleRepository.findOne(1L));*/
-//		log.info("GeoCode Result :"+geoCodeRepository.findOne(1L)); // pakeista repository
-
 		Double startLat = 51.742503;
 		Double startLng = 19.432956;
 
-		List<GeoCode> geoCodes = geoCodeRepository.getGeoCodesWithDistanceList(startLat,startLng,500,50);
-		log.info("Distance result..:", geoCodes);
+		List<GeoCode> breweries = geoCodeRepository.getGeoCodesWithDistanceList(startLat,startLng,500,50);
+		log.info("Distance result..:", breweries);
 
-		GeoCode temp = geoCodes.get(0);
-		Double distance= null;
+		GeoCode temp = breweries.get(0);
+		Double distance= temp.getDistance();
 
 		List<GeoCode> result = new ArrayList<>();
-		result.add(temp);
-			for (int i = 1; i < geoCodes.size(); i++) {
-				distance = calculationService.distance(temp.getLatitude(), temp.getLongitude(), geoCodes.get(i).getLatitude(), geoCodes.get(i).getLongitude());
-				if (temp.getDistance() > distance) {
-					temp = geoCodes.get(i);
-					temp.setDistance(distance);
-					result.add(temp);
-				}
+		result.add(breweries.get(0));
+		getResultList(breweries, temp, distance, result);
+
+
+		printOut(result);
+	}
+
+	private double getDistanceSum(List<GeoCode> result) {
+		double distanceSum = 0;
+		for(GeoCode g:result)
+			distanceSum+= g.getDistance();
+		return distanceSum;
+	}
+
+	private void getResultList(List<GeoCode> breweries, GeoCode temp, Double distance, List<GeoCode> result) {
+		Double tempDist;
+		for (int i = 1; i < breweries.size(); i++) {
+            tempDist = getDistance(breweries, temp, i);
+            if (distance > tempDist) {
+                temp = breweries.get(i);
+                temp.setDistance(tempDist);
+                result.add(temp);
+				if(getDistanceSum(result)>1300)
+					break;
 			}
+        }
+	}
+
+	private void printOut(List<GeoCode> result) {
 		log.info("After Loop result..:", result);
+		for(GeoCode d:result)
+            System.out.println(d.getLatitude().toString()+" , "+d.getLongitude().toString()+" distance: "+ d.getDistance().longValue()+"km");
+	}
+
+	private double getDistance(List<GeoCode> geoCodes, GeoCode temp, int i) {
+		return calculationService.distance(temp.getLatitude(), temp.getLongitude(), geoCodes.get(i).getLatitude(), geoCodes.get(i).getLongitude());
 	}
 }
