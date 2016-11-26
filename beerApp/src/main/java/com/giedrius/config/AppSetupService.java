@@ -1,21 +1,23 @@
-package com.giedrius.services;
+package com.giedrius.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Created by gsvazinskas on 11/25/2016.
  */
 @Slf4j
 @Component
-public class AppSetupServiceImpl implements DatabaseLoader {
+public class AppSetupService implements DatabaseLoader {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-
+    @PostConstruct
     public void createTables() {
         log.debug("Setting up data...");
 

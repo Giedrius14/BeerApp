@@ -1,4 +1,4 @@
-package com.giedrius.services;
+package com.giedrius.config;
 
 /**
  * Created by gsvazinskas on 11/25/2016.

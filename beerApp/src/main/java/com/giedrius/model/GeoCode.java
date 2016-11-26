@@ -17,4 +17,5 @@ public class GeoCode {
     private Double latitude;
     private Double longitude;
     private String accuracy;
+    private Double distance;
 }
