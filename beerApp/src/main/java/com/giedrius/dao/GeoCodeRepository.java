@@ -12,6 +12,8 @@ import java.util.List;
  */
 public interface GeoCodeRepository extends Repository<GeoCode, Long> {
     @Query(value="SELECT *, (6371 * acos(cos(radians( :startLat )) * cos(radians(latitude)) * cos(radians(longitude) - radians( :startLong )) + sin(radians( :startLat)) * sin(radians(latitude )))) AS distance FROM GEO_CODE GROUP BY id HAVING distance < :limitDistance ORDER BY distance LIMIT :limitResults",nativeQuery=true)
-    List<GeoCode> getGeoCodesWithDistance(@Param("startLat") Double startLat, @Param("startLong") Double startLong, @Param("limitDistance") int limitDistance,@Param("limitResults")  int limitResults);
+    List<GeoCode> getGeoCodesWithDistanceList(@Param("startLat") Double startLat, @Param("startLong") Double startLong, @Param("limitDistance") int limitDistance, @Param("limitResults")  int limitResults);
 
+    @Query(value="SELECT *, (6371 * acos(cos(radians( :startLat )) * cos(radians(latitude)) * cos(radians(longitude) - radians( :startLong )) + sin(radians( :startLat)) * sin(radians(latitude )))) AS distance FROM GEO_CODE GROUP BY id HAVING distance < :limitDistance ORDER BY distance LIMIT :limitResults",nativeQuery=true)
+    GeoCode getGeoCodesWithDistance(@Param("startLat") Double startLat, @Param("startLong") Double startLong, @Param("limitDistance") int limitDistance, @Param("limitResults")  int limitResults);
 }

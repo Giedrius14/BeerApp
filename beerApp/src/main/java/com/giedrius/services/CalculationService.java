@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CalculationService {
 
-    public static double distance(double lat1, double lat2, double lon1, double lon2) {
+    public double distance(double lat1, double lon1, double lat2, double lon2) {
 
         final int R = 6371; // Radius of the earth 6371
 
@@ -18,7 +18,7 @@ public class CalculationService {
                 + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
                 * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c * 1000; // convert to meters
+        double distance = R * c;
         distance = Math.pow(distance, 2);
 
         return Math.sqrt(distance);
