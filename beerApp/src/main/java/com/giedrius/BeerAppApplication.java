@@ -1,6 +1,7 @@
 package com.giedrius;
 
 import com.giedrius.dao.*;
+import com.giedrius.model.Beer;
 import com.giedrius.model.GeoCode;
 import com.giedrius.services.CalculationService;
 import lombok.extern.slf4j.Slf4j;
@@ -75,9 +76,18 @@ public class BeerAppApplication implements CommandLineRunner{
 	}
 
 	private void printOut(List<GeoCode> result) {
-		log.info("After Loop result..:", result);
-		for(GeoCode d:result)
-            System.out.println(d.getLatitude().toString()+" , "+d.getLongitude().toString()+" distance: "+ d.getDistance().longValue()+"km");
+		List<Beer> beerList = new ArrayList<>();
+
+		System.out.println("Found "+ result.size()+" beer factories:");
+		for(GeoCode d:result) {
+			System.out.println("[" + d.getBrewery().getId() + "] " + d.getBrewery().getName() + "  Cords:" + d.getLatitude().toString() + " , " + d.getLongitude().toString() + " distance: " + d.getDistance().longValue() + "km");
+			beerList.addAll(beerRepository.findByBrewery(d.getBrewery().getId()));
+		}
+		System.out.println();
+		System.out.println("Total distance travelled: "+ getDistanceSum(result)+"km");
+		System.out.println();
+		System.out.println();
+		System.out.println("Collected "+ beerList.size());
 	}
 
 	private double getDistance(List<GeoCode> geoCodes, GeoCode temp, int i) {
