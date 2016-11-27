@@ -42,7 +42,10 @@ public class UtilsService implements CalculationService, PrintService {
         printTotalDistance(result, home);
         printBeerTypes(beerList);
     }
-
+    @Override
+    public double getTotalDistanceSum(List<GeoCode> result, GeoCode home) {
+        return getDistanceSum(result) + getDistanceToHome(result, home);
+    }
     private void printBreweryList(List<GeoCode> result, List<Beer> beerList,GeoCode home) {
         System.out.printf("Found %d beer factories: \n",result.size());
         System.out.printf("\t [Home] ####################### Cords: %11.8f, %11.8f \n",home.getLatitude(),home.getLongitude());
@@ -51,11 +54,11 @@ public class UtilsService implements CalculationService, PrintService {
             System.out.printf("\t [%4d]  %-50s Cords: %11.8f, %11.8f \t distance: %3d km \n", brew.getBrewery().getId(), brew.getBrewery().getName(), brew.getLatitude(), brew.getLongitude(), brew.getDistance().longValue());
             beerList.addAll(getBeerByBrewery(brew));
         }
-        System.out.printf("\t [Home] ####################### Cords: %11.8f, %11.8f \t distance: %3f km \n",home.getLatitude(),home.getLongitude(),getDistanceToHome(result,home));
+        System.out.printf("\t [Home] ####################### Cords: %11.8f, %11.8f \t distance: %3.0f km \n",home.getLatitude(),home.getLongitude(),getDistanceToHome(result,home));
     }
 
     private void printTotalDistance(List<GeoCode> result,GeoCode home) {
-        System.out.printf("\nTotal distance travelled: %.0f km \n", calculationService.getDistanceSum(result)+ getDistanceToHome(result, home));
+        System.out.printf("\nTotal distance travelled: %.0f km \n", getTotalDistanceSum(result, home));
     }
 
     private void printBeerTypes(List<Beer> beerList) {
@@ -64,7 +67,7 @@ public class UtilsService implements CalculationService, PrintService {
             System.out.printf("\t\t %s \n",b.getName());
     }
 
-    private double getDistanceToHome(List<GeoCode> result, GeoCode home) {
+    private Double getDistanceToHome(List<GeoCode> result, GeoCode home) {
         return getDistance(result, home,result.size()-1);
     }
 
@@ -73,7 +76,7 @@ public class UtilsService implements CalculationService, PrintService {
     }
 
     private double getDistance(List<GeoCode> geoCodes, GeoCode temp, int i) {
-        return calculationService.distance(temp.getLatitude(), temp.getLongitude(), geoCodes.get(i).getLatitude(), geoCodes.get(i).getLongitude());
+        return distance(temp.getLatitude(), temp.getLongitude(), geoCodes.get(i).getLatitude(), geoCodes.get(i).getLongitude());
     }
 
     public double getDistanceSum(List<GeoCode> result) {
@@ -82,4 +85,6 @@ public class UtilsService implements CalculationService, PrintService {
             distanceSum+= g.getDistance();
         return distanceSum;
     }
+
+
 }

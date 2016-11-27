@@ -14,6 +14,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 @Slf4j
 @SpringBootApplication
@@ -41,26 +42,40 @@ public class BeerAppApplication {
 	}
 
 	private void run() {
-	/*	Scanner scan = new Scanner(System.in);
-		System.out.println("Enter latitude: ");
-		Double homeLat = Double.valueOf(scan.next());
-
-		System.out.println("Enter longitude: ");
-		Double homeLong = Double.valueOf(scan.next());*/
-
-/*		Double startLat = homeLat;//51.742503
-		Double startLng = homeLong;//19.432956*/
+/*		while(startLat==null && startLng ==null){
+			getUserInput();
+		}*/
+/*		 startLat = 51.742503;//51.742503
+		 startLng = 19.432956;//19.432956*/
 		startLat = 51.355468;
 		startLng = 11.100790;
-		home = new GeoCode(startLat,startLng);
-
-		breweries = getGeoCodesWithDistanceList();
-		GeoCode temp = breweries.get(0);
-		List<GeoCode> result = new ArrayList<>();
-		result.add(temp);
-		getResultList(breweries, temp, result);
-		printService.printResult(result, home);
+		setHome();
+		if(startLat!=null && startLng !=null) {
+			breweries = getGeoCodesWithDistanceList();
+			GeoCode temp = breweries.get(0);
+			List<GeoCode> result = new ArrayList<>();
+			result.add(temp);
+			getResultList(breweries, temp, result);
+			printService.printResult(result, home);
+		}
 	}
+
+	private void setHome() {
+		home = new GeoCode(startLat,startLng);
+	}
+
+	private void getUserInput() {
+		Scanner scan = new Scanner(System.in);
+		System.out.print("Enter latitude: ");
+		try {
+			startLat = Double.valueOf(scan.next());
+			System.out.print("Enter longitude: ");
+			startLng = Double.valueOf(scan.next());
+		}catch (NumberFormatException e){
+			System.out.println("Bad format");
+		}
+	}
+
 	private void getResultList(List<GeoCode> breweries, GeoCode tmpBrewery, List<GeoCode> result) {
 		Double currentDistance;
 		for (int i = 1; i < breweries.size(); i++) {
@@ -75,14 +90,14 @@ public class BeerAppApplication {
             tmpBrewery = breweries.get(i);
             tmpBrewery.setDistance(currentDistance);
             result.add(tmpBrewery);
-            if(result.size()>3 && calculationService.getDistanceSum(result)>1300)
+            if(calculationService.getTotalDistanceSum(result, home)>1900)
 				return null;
         }
 		return tmpBrewery;
 	}
 
 	private List<GeoCode> getGeoCodesWithDistanceList() {
-		return geoCodeRepository.getGeoCodesWithDistanceList(startLat,startLng,500,50);
+		return geoCodeRepository.getGeoCodesWithDistanceList(startLat,startLng,500,100);
 	}
 
 	private double getDistance(List<GeoCode> geoCodes, GeoCode temp, int i) {
