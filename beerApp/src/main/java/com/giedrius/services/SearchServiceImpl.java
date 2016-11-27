@@ -39,7 +39,7 @@ public class SearchServiceImpl {
         home = new GeoCode(startLat,startLng);
     }
 
-    private void getResultList(List<GeoCode> breweries, GeoCode tmpBrewery, List<GeoCode> result) {
+    private void getResultList(List<GeoCode> breweries, GeoCode tmpBrewery, List<GeoCode> result) { //TODO reikia improve
         Double currentDistance;
         for (int i = 1; i < breweries.size(); i++) {
             currentDistance = getDistance(breweries, tmpBrewery, i);
@@ -54,7 +54,7 @@ public class SearchServiceImpl {
     }
 
     private boolean checkDistance(GeoCode tmpBrewery, Double currentDistance) {
-        return tmpBrewery.getDistance() > currentDistance || currentDistance<300;
+        return tmpBrewery.getDistance() > currentDistance || currentDistance<300; //TODO reikia fix nes riboja rezultatus
     }
 
     private List<GeoCode> getGeoCodesWithDistanceList() {
