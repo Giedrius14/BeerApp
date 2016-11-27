@@ -1,9 +1,9 @@
 package com.giedrius;
 
-import com.giedrius.dao.*;
-import com.giedrius.model.Beer;
+import com.giedrius.dao.GeoCodeRepository;
 import com.giedrius.model.GeoCode;
 import com.giedrius.services.CalculationService;
+import com.giedrius.services.PrintService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
@@ -24,13 +24,11 @@ public class BeerAppApplication {
 	@Autowired
 	private CalculationService calculationService;
 	@Autowired
-	private BeerRepository beerRepository;
-	@Autowired
-	private BreweryRepository breweryRepository;
-	@Autowired
-	private CategoryRepository categoryRepository;
-	@Autowired
-	private StyleRepository styleRepository;
+	private PrintService printService;
+
+	private Double startLat,startLng;
+	private GeoCode home;
+	private List<GeoCode> breweries;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BeerAppApplication.class, args);
@@ -52,60 +50,39 @@ public class BeerAppApplication {
 
 /*		Double startLat = homeLat;//51.742503
 		Double startLng = homeLong;//19.432956*/
-		Double startLat = 51.355468;
-		Double startLng = 11.100790;
-		List<GeoCode> breweries = geoCodeRepository.getGeoCodesWithDistanceList(startLat,startLng,500,50);
-		log.info("Distance result..:", breweries);
+		startLat = 51.355468;
+		startLng = 11.100790;
+		home = new GeoCode(startLat,startLng);
 
+		breweries = getGeoCodesWithDistanceList();
 		GeoCode temp = breweries.get(0);
-		Double distance= temp.getDistance();
-
 		List<GeoCode> result = new ArrayList<>();
-		result.add(breweries.get(0));
-		getResultList(breweries, temp, distance, result);
-
-
-		printOut(result);
+		result.add(temp);
+		getResultList(breweries, temp, result);
+		printService.printResult(result, home);
 	}
-
-	private double getDistanceSum(List<GeoCode> result) {
-		double distanceSum = 0;
-		for(GeoCode g:result)
-			distanceSum+= g.getDistance();
-		return distanceSum;
-	}
-
-	private void getResultList(List<GeoCode> breweries, GeoCode temp, Double distance, List<GeoCode> result) {
-		Double tempDist;
+	private void getResultList(List<GeoCode> breweries, GeoCode tmpBrewery, List<GeoCode> result) {
+		Double currentDistance;
 		for (int i = 1; i < breweries.size(); i++) {
-            tempDist = getDistance(breweries, temp, i);
-            if (distance > tempDist || tempDist<200) {
-                temp = breweries.get(i);
-                temp.setDistance(tempDist);
-                result.add(temp);
-				if(result.size()>3 && getDistanceSum(result)>1300)
-					break;
-			}
-        }
-	}
-
-	private void printOut(List<GeoCode> result) {
-		List<Beer> beerList = new ArrayList<>();
-
-		System.out.printf("Found %d beer factories: \n",result.size());
-		for(GeoCode brew:result) {
-//			System.out.printf("\t %11.8f, %11.8f \n", brew.getLatitude(), brew.getLongitude()); // cords for testing
-			System.out.printf("\t [%4d]  %-50s Cords: %11.8f, %11.8f \t distance: %3d km \n", brew.getBrewery().getId(), brew.getBrewery().getName(), brew.getLatitude(), brew.getLongitude(), brew.getDistance().longValue());
-			beerList.addAll(getBeerByBrewery(brew));
+			currentDistance = getDistance(breweries, tmpBrewery, i);
+			if (addToResultList(breweries, tmpBrewery, result, currentDistance, i) == null)
+				break;
 		}
-		System.out.printf("\nTotal distance travelled: %.0f km \n",getDistanceSum(result));
-		System.out.printf("Collected %d beer types: \n",beerList.size());
-		for(Beer b:beerList)
-			System.out.printf("\t\t %s \n",b.getName());
 	}
 
-	private List<Beer> getBeerByBrewery(GeoCode d) {
-		return beerRepository.findByBrewery(d.getBrewery().getId());
+	private GeoCode addToResultList(List<GeoCode> breweries, GeoCode tmpBrewery, List<GeoCode> result, Double currentDistance, int i) {
+		if (tmpBrewery.getDistance() > currentDistance || currentDistance<200) {
+            tmpBrewery = breweries.get(i);
+            tmpBrewery.setDistance(currentDistance);
+            result.add(tmpBrewery);
+            if(result.size()>3 && calculationService.getDistanceSum(result)>1300)
+				return null;
+        }
+		return tmpBrewery;
+	}
+
+	private List<GeoCode> getGeoCodesWithDistanceList() {
+		return geoCodeRepository.getGeoCodesWithDistanceList(startLat,startLng,500,50);
 	}
 
 	private double getDistance(List<GeoCode> geoCodes, GeoCode temp, int i) {

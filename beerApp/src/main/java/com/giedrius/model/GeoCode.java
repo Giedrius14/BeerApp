@@ -22,4 +22,10 @@ public class GeoCode {
     private Double longitude;
     private String accuracy;
     private Double distance;
+
+    GeoCode(){}
+    public GeoCode(Double latitude, Double longitude){
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 }

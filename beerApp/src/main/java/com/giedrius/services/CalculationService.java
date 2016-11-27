@@ -1,26 +1,14 @@
 package com.giedrius.services;
 
-import org.springframework.stereotype.Service;
+import com.giedrius.model.GeoCode;
+
+import java.util.List;
 
 /**
- * Created by User on 2016.11.26.
+ * Created by User on 2016.11.27.
  */
-@Service
-public class CalculationService {
+public interface CalculationService {
+    double distance(double lat1, double lon1, double lat2, double lon2);
 
-    public double distance(double lat1, double lon1, double lat2, double lon2) {
-
-        final int R = 6371; // Radius of the earth 6371
-
-        Double latDistance = Math.toRadians(lat2 - lat1);
-        Double lonDistance = Math.toRadians(lon2 - lon1);
-        Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c;
-        distance = Math.pow(distance, 2);
-
-        return Math.sqrt(distance);
-    }
+     double getDistanceSum(List<GeoCode> result);
 }
