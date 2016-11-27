@@ -4,6 +4,7 @@ import com.giedrius.dao.GeoCodeRepository;
 import com.giedrius.model.GeoCode;
 import com.giedrius.services.CalculationService;
 import com.giedrius.services.PrintService;
+import com.giedrius.services.SearchServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
@@ -27,6 +28,9 @@ public class BeerAppApplication {
 	@Autowired
 	private PrintService printService;
 
+	@Autowired
+	private SearchServiceImpl searchService;
+
 	private Double startLat,startLng;
 	private GeoCode home;
 	private List<GeoCode> breweries;
@@ -42,15 +46,18 @@ public class BeerAppApplication {
 	}
 
 	private void run() {
-/*		while(startLat==null && startLng ==null){
-			getUserInput();
-		}*/
-/*		 startLat = 51.742503;//51.742503
-		 startLng = 19.432956;//19.432956*/
-		startLat = 51.355468;
-		startLng = 11.100790;
+//		getUserInput();
+
+		 startLat = 51.742503;//51.742503
+		 startLng = 19.432956;//19.432956
+/*		startLat = 51.355468;
+		startLng = 11.100790;*/
+		findLocalBreweries();
+	}
+
+	private void findLocalBreweries() {
 		setHome();
-		if(startLat!=null && startLng !=null) {
+		if(homeNotNull()) {
 			breweries = getGeoCodesWithDistanceList();
 			GeoCode temp = breweries.get(0);
 			List<GeoCode> result = new ArrayList<>();
@@ -60,19 +67,25 @@ public class BeerAppApplication {
 		}
 	}
 
+	private boolean homeNotNull() {
+		return startLat!=null && startLng !=null;
+	}
+
 	private void setHome() {
 		home = new GeoCode(startLat,startLng);
 	}
 
 	private void getUserInput() {
 		Scanner scan = new Scanner(System.in);
-		System.out.print("Enter latitude: ");
-		try {
-			startLat = Double.valueOf(scan.next());
-			System.out.print("Enter longitude: ");
-			startLng = Double.valueOf(scan.next());
-		}catch (NumberFormatException e){
-			System.out.println("Bad format");
+		while(startLat==null && startLng ==null) {
+			System.out.print("Enter latitude: ");
+			try {
+				startLat = Double.valueOf(scan.next());
+				System.out.print("Enter longitude: ");
+				startLng = Double.valueOf(scan.next());
+			} catch (NumberFormatException e) {
+				System.out.println("Bad format");
+			}
 		}
 	}
 
@@ -80,20 +93,18 @@ public class BeerAppApplication {
 		Double currentDistance;
 		for (int i = 1; i < breweries.size(); i++) {
 			currentDistance = getDistance(breweries, tmpBrewery, i);
-			if (addToResultList(breweries, tmpBrewery, result, currentDistance, i) == null)
-				break;
+			if (checkDistance(tmpBrewery, currentDistance)) {
+				tmpBrewery = breweries.get(i);
+				tmpBrewery.setDistance(currentDistance);
+				result.add(tmpBrewery);
+				if(calculationService.getTotalDistanceSum(result, home)>1900)
+					break;
+			}
 		}
 	}
 
-	private GeoCode addToResultList(List<GeoCode> breweries, GeoCode tmpBrewery, List<GeoCode> result, Double currentDistance, int i) {
-		if (tmpBrewery.getDistance() > currentDistance || currentDistance<200) {
-            tmpBrewery = breweries.get(i);
-            tmpBrewery.setDistance(currentDistance);
-            result.add(tmpBrewery);
-            if(calculationService.getTotalDistanceSum(result, home)>1900)
-				return null;
-        }
-		return tmpBrewery;
+	private boolean checkDistance(GeoCode tmpBrewery, Double currentDistance) {
+		return tmpBrewery.getDistance() > currentDistance || currentDistance<300;
 	}
 
 	private List<GeoCode> getGeoCodesWithDistanceList() {
