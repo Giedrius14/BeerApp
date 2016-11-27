@@ -31,13 +31,18 @@ public class BeerAppApplication {
 	}
 
 	private void run() {
-//		getUserInput();
+		getUserInput();
 
 	/*	 startLat = 51.742503;//51.742503
 		 startLng = 19.432956;//19.432956*/
-		startLat = 51.355468;
-		startLng = 11.100790;
+		/*startLat = 51.355468;
+		startLng = 11.100790;*/
+
+		long startTime = System.nanoTime();
 		searchService.findLocalBreweries(startLat, startLng);
+		long endTime = System.nanoTime();
+
+		System.out.printf("Program took: %d ms \n", (endTime - startTime)/1000000 );
 	}
 
 	private boolean homeNotNull() {
