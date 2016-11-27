@@ -1,4 +1,4 @@
-package com.giedrius;
+package com.giedrius.IT;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class BeerAppApplicationTests {
+public class BeerAppApplicationIT {
 
 	@Test
 	public void contextLoads() {
