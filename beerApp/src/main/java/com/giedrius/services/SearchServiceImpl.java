@@ -58,7 +58,7 @@ public class SearchServiceImpl {
     }
 
     private List<GeoCode> getGeoCodesWithDistanceList() {
-        return geoCodeRepository.getGeoCodesWithDistanceList(home.getLatitude(),home.getLongitude(),500,100);
+        return geoCodeRepository.getGeoCodesWithDistanceList(home.getLatitude(),home.getLongitude(),600,30);
     }
 
     private double getDistance(List<GeoCode> geoCodes, GeoCode temp, int i) {

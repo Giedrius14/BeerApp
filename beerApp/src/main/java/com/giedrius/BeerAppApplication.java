@@ -33,9 +33,9 @@ public class BeerAppApplication {
 	private void run() {
 		getUserInput();
 
-	/*	 startLat = 51.742503;
+/*		 startLat = 51.742503; // 11 ir 18
 		 startLng = 19.432956;*/
-/*		startLat = 51.355468;
+/*		startLat = 51.355468; // randa 12 fact ir 36 beer
 		startLng = 11.100790;*/
 
 		long startTime = System.nanoTime();
