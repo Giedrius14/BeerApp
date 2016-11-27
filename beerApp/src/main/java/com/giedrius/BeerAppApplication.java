@@ -43,10 +43,17 @@ public class BeerAppApplication {
 	}
 
 	private void run() {
+	/*	Scanner scan = new Scanner(System.in);
+		System.out.println("Enter latitude: ");
+		Double homeLat = Double.valueOf(scan.next());
 
-		Double startLat = 51.742503;
-		Double startLng = 19.432956;
+		System.out.println("Enter longitude: ");
+		Double homeLong = Double.valueOf(scan.next());*/
 
+/*		Double startLat = homeLat;//51.742503
+		Double startLng = homeLong;//19.432956*/
+		Double startLat = 51.355468;
+		Double startLng = 11.100790;
 		List<GeoCode> breweries = geoCodeRepository.getGeoCodesWithDistanceList(startLat,startLng,500,50);
 		log.info("Distance result..:", breweries);
 
@@ -72,11 +79,11 @@ public class BeerAppApplication {
 		Double tempDist;
 		for (int i = 1; i < breweries.size(); i++) {
             tempDist = getDistance(breweries, temp, i);
-            if (distance > tempDist) {
+            if (distance > tempDist || tempDist<200) {
                 temp = breweries.get(i);
                 temp.setDistance(tempDist);
                 result.add(temp);
-				if(getDistanceSum(result)>1300)
+				if(result.size()>3 && getDistanceSum(result)>1300)
 					break;
 			}
         }
@@ -87,7 +94,8 @@ public class BeerAppApplication {
 
 		System.out.printf("Found %d beer factories: \n",result.size());
 		for(GeoCode brew:result) {
-			System.out.printf("\t [%4d]  %-50s Cords: %.8f, %.8f \t distance: %3d km \n", brew.getBrewery().getId(), brew.getBrewery().getName(), brew.getLatitude(), brew.getLongitude(), brew.getDistance().longValue());
+//			System.out.printf("\t %11.8f, %11.8f \n", brew.getLatitude(), brew.getLongitude()); // cords for testing
+			System.out.printf("\t [%4d]  %-50s Cords: %11.8f, %11.8f \t distance: %3d km \n", brew.getBrewery().getId(), brew.getBrewery().getName(), brew.getLatitude(), brew.getLongitude(), brew.getDistance().longValue());
 			beerList.addAll(getBeerByBrewery(brew));
 		}
 		System.out.printf("\nTotal distance travelled: %.0f km \n",getDistanceSum(result));
