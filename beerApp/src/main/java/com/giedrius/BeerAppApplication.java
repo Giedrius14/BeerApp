@@ -78,18 +78,16 @@ public class BeerAppApplication implements CommandLineRunner{
 	private void printOut(List<GeoCode> result) {
 		List<Beer> beerList = new ArrayList<>();
 
-		System.out.println("Found "+ result.size()+" beer factories:");
+		System.out.printf("Found %d beer factories: \n",result.size());
 		for(GeoCode d:result) {
-			System.out.println("[" + d.getBrewery().getId() + "] " + d.getBrewery().getName() + "  Cords:" + d.getLatitude().toString() + " , " + d.getLongitude().toString() + " distance: " + d.getDistance().longValue() + "km");
+			System.out.printf("\t [%4d]  %-50s Cords: %.8f, %.8f \t distance: %3d km \n", d.getBrewery().getId(), d.getBrewery().getName(), d.getLatitude(), d.getLongitude(), d.getDistance().longValue());
 			beerList.addAll(beerRepository.findByBrewery(d.getBrewery().getId()));
 		}
 		System.out.println();
-		System.out.println("Total distance travelled: "+ getDistanceSum(result)+"km");
-		System.out.println();
-		System.out.println();
-		System.out.println("Collected "+ beerList.size() + "beer types:");
+		System.out.printf("Total distance travelled: %.0f km \n",getDistanceSum(result));
+		System.out.printf("Collected %d beer types: \n",beerList.size());
 		for(Beer b:beerList)
-			System.out.println(b.getName());
+			System.out.printf("\t\t %s \n",b.getName());
 	}
 
 	private double getDistance(List<GeoCode> geoCodes, GeoCode temp, int i) {
