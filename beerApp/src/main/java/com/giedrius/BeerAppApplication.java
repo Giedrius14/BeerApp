@@ -87,7 +87,9 @@ public class BeerAppApplication implements CommandLineRunner{
 		System.out.println("Total distance travelled: "+ getDistanceSum(result)+"km");
 		System.out.println();
 		System.out.println();
-		System.out.println("Collected "+ beerList.size());
+		System.out.println("Collected "+ beerList.size() + "beer types:");
+		for(Beer b:beerList)
+			System.out.println(b.getName());
 	}
 
 	private double getDistance(List<GeoCode> geoCodes, GeoCode temp, int i) {
