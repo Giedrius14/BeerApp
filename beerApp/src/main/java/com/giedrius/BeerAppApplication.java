@@ -6,16 +6,18 @@ import com.giedrius.model.GeoCode;
 import com.giedrius.services.CalculationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @SpringBootApplication
-public class BeerAppApplication implements CommandLineRunner{
+public class BeerAppApplication {
 
 	@Autowired
 	private GeoCodeRepository geoCodeRepository;
@@ -32,10 +34,15 @@ public class BeerAppApplication implements CommandLineRunner{
 
 	public static void main(String[] args) {
 		SpringApplication.run(BeerAppApplication.class, args);
+		ConfigurableApplicationContext context = new SpringApplicationBuilder()
+				.sources(BeerAppApplication.class)
+				.bannerMode(Banner.Mode.OFF)
+				.run(args);
+		BeerAppApplication app = context.getBean(BeerAppApplication.class);
+		app.run();
 	}
 
-	@Override
-	public void run(String... strings) throws Exception {
+	private void run() {
 
 		Double startLat = 51.742503;
 		Double startLng = 19.432956;
@@ -79,15 +86,18 @@ public class BeerAppApplication implements CommandLineRunner{
 		List<Beer> beerList = new ArrayList<>();
 
 		System.out.printf("Found %d beer factories: \n",result.size());
-		for(GeoCode d:result) {
-			System.out.printf("\t [%4d]  %-50s Cords: %.8f, %.8f \t distance: %3d km \n", d.getBrewery().getId(), d.getBrewery().getName(), d.getLatitude(), d.getLongitude(), d.getDistance().longValue());
-			beerList.addAll(beerRepository.findByBrewery(d.getBrewery().getId()));
+		for(GeoCode brew:result) {
+			System.out.printf("\t [%4d]  %-50s Cords: %.8f, %.8f \t distance: %3d km \n", brew.getBrewery().getId(), brew.getBrewery().getName(), brew.getLatitude(), brew.getLongitude(), brew.getDistance().longValue());
+			beerList.addAll(getBeerByBrewery(brew));
 		}
-		System.out.println();
-		System.out.printf("Total distance travelled: %.0f km \n",getDistanceSum(result));
+		System.out.printf("\nTotal distance travelled: %.0f km \n",getDistanceSum(result));
 		System.out.printf("Collected %d beer types: \n",beerList.size());
 		for(Beer b:beerList)
 			System.out.printf("\t\t %s \n",b.getName());
+	}
+
+	private List<Beer> getBeerByBrewery(GeoCode d) {
+		return beerRepository.findByBrewery(d.getBrewery().getId());
 	}
 
 	private double getDistance(List<GeoCode> geoCodes, GeoCode temp, int i) {
