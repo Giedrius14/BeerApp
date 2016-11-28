@@ -8,7 +8,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * Created by User on 2016.11.27.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-public class BeerAppApplicationTest {
+public class BeerAppTest {
     @Test
     public void firstTest(){}
 }

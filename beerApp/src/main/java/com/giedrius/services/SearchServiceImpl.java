@@ -13,6 +13,8 @@ import java.util.List;
  */
 @Service
 public class SearchServiceImpl {
+    public static final int LIMIT_DISTANCE_FROM_HOME = 1500;
+    public static final int LIMIT_RESULT_SIZE = 30;
     @Autowired
     private GeoCodeRepository geoCodeRepository;
     @Autowired
@@ -27,7 +29,7 @@ public class SearchServiceImpl {
     public void findLocalBreweries(Double startLat, Double startLng) {
         setHome(startLat, startLng);
         if(homeNotNull()) {
-            breweries = getGeoCodesWithDistanceList();
+            breweries = getClosestBreweriesFromHome();
             GeoCode temp = breweries.get(0);
             List<GeoCode> result = new ArrayList<>();
             result.add(temp);
@@ -57,8 +59,8 @@ public class SearchServiceImpl {
         return tmpBrewery.getDistance() > currentDistance || currentDistance<300; //TODO reikia fix nes riboja rezultatus
     }
 
-    private List<GeoCode> getGeoCodesWithDistanceList() {
-        return geoCodeRepository.getGeoCodesWithDistanceList(home.getLatitude(),home.getLongitude(),1500,30);
+    private List<GeoCode> getClosestBreweriesFromHome() {
+        return geoCodeRepository.getGeoCodesWithDistanceList(home.getLatitude(),home.getLongitude(), LIMIT_DISTANCE_FROM_HOME, LIMIT_RESULT_SIZE);
     }
 
     private double getDistance(List<GeoCode> geoCodes, GeoCode temp, int i) {

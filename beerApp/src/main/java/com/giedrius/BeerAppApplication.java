@@ -31,12 +31,12 @@ public class BeerAppApplication {
 	}
 
 	private void run() {
-		getUserInput();
+//		getUserInput();
 
 /*		 startLat = 51.742503; // 11 ir 18
 		 startLng = 19.432956;*/
-/*		startLat = 51.355468; // randa 12 fact ir 36 beer  211ms
-		startLng = 11.100790;*/
+		startLat = 51.355468; // randa 12 fact ir 36 beer  211ms
+		startLng = 11.100790;
 
 		long startTime = System.nanoTime();
 		searchService.findLocalBreweries(startLat, startLng);
@@ -44,14 +44,14 @@ public class BeerAppApplication {
 		System.out.printf("Program took: %d ms \n", (endTime - startTime)/1000000 );
 	}
 
-	private boolean homeNotNull() {
-		return startLat!=null && startLng !=null;
+	private boolean homeNull() {
+		return startLat==null && startLng ==null;
 	}
 
 
 	private void getUserInput() {
 		Scanner scan = new Scanner(System.in);
-		while(homeNotNull()) {
+		while(homeNull()) {
 			System.out.print("Enter latitude: ");
 			try {
 				startLat = Double.valueOf(scan.next());
