@@ -17,8 +17,11 @@ public class BeerAppApplication {
 
 	@Autowired
 	private SearchService searchService;
-
 	private Double startLat,startLng;
+
+	private Boolean exit = false;
+	long startTime = 0;
+	long endTime = 0;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BeerAppApplication.class, args);
@@ -31,18 +34,29 @@ public class BeerAppApplication {
 	}
 
 	private void run() {
-//		getUserInput();
+		while(!exit)
+			try {
+				getUserInput();
+				startSearch();
+			} catch (Exception e) {
+				log.error("Error occurred",e);
+				System.out.println("### Error occurred ###");
+				reset();
+			}
 
-/*		 startLat = 51.742503; // 11 ir 18
-		 startLng = 19.432956;*/
-	/*	startLat = 51.355468; // randa 12 fact ir 36 beer  211ms
-		startLng = 11.100790;*/
-		startLat = 51.742503; // randa 11 fact ir 18 beer  326ms
-		startLng = 19.432956;
-		long startTime = System.nanoTime();
+	}
+
+	private void startSearch() {
+		startTime = System.nanoTime();
 		searchService.findLocalBreweries(startLat, startLng);
-		long endTime = System.nanoTime();
+		endTime = System.nanoTime();
 		System.out.printf("Program took: %d ms \n", (endTime - startTime)/1000000 );
+		promtExit();
+	}
+
+	private void reset() {
+		startLat = null;
+		startLng = null;
 	}
 
 	private boolean homeNull() {
@@ -59,8 +73,22 @@ public class BeerAppApplication {
 				System.out.print("Enter longitude: ");
 				startLng = Double.valueOf(scan.next());
 			} catch (NumberFormatException e) {
-				System.out.println("Bad format");
+				System.out.println("### Bad format ###");
 			}
 		}
+	}
+	private void promtExit() {
+		String result = null;
+		Scanner scan = new Scanner(System.in);
+		System.out.print("Exit application?(Y/N) ");
+		try {
+			result = scan.next();
+		} catch (NumberFormatException e) {
+			System.out.println("### Bad format ###");
+		}
+		if(!result.equalsIgnoreCase("N"))
+			exit = true;
+		else
+			reset();
 	}
 }

@@ -3,6 +3,7 @@ package com.giedrius.services;
 import com.giedrius.dao.BeerRepository;
 import com.giedrius.model.Beer;
 import com.giedrius.model.GeoCode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.List;
 /**
  * Created by User on 2016.11.26.
  */
+@Slf4j
 @Service
 public class UtilsService implements CalculationService, PrintService {
     @Autowired
@@ -37,10 +39,14 @@ public class UtilsService implements CalculationService, PrintService {
 
     @Override
     public void printResult(List<GeoCode> result, GeoCode home) {
-        List<Beer> beerList = new ArrayList<>();
-        printBreweryList(result, beerList,home);
-        printTotalDistance(result, home);
-        printBeerTypes(beerList);
+        if(result.size()>0) {
+            List<Beer> beerList = new ArrayList<>();
+            printBreweryList(result, beerList, home);
+            printTotalDistance(result, home);
+            printBeerTypes(beerList);
+        }else {
+            System.out.println("No results found");
+        }
     }
     @Override
     public double getTotalDistanceSum(List<GeoCode> result, GeoCode home) {
@@ -50,7 +56,7 @@ public class UtilsService implements CalculationService, PrintService {
         System.out.printf("Found %d beer factories: \n",result.size());
         System.out.printf("\t [Home] ####################### Cords: %11.8f, %11.8f \n",home.getLatitude(),home.getLongitude());
         for(GeoCode brew:result) {
-//			System.out.printf("\t %11.8f, %11.8f \n", brew.getLatitude(), brew.getLongitude()); // cords for testing
+			log.debug("\t %11.8f, %11.8f \n", brew.getLatitude(), brew.getLongitude()); // cords for testing
             System.out.printf("\t [%4d]  %-50s Cords: %11.8f, %11.8f \t distance: %3d km \n", brew.getBrewery().getId(), brew.getBrewery().getName(), brew.getLatitude(), brew.getLongitude(), brew.getDistance().longValue());
             beerList.addAll(getBeerByBrewery(brew));
         }

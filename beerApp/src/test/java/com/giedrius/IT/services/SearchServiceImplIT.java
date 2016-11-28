@@ -18,5 +18,16 @@ public class SearchServiceImplIT extends BeerAppIT {
     public void findLocalBreweries() throws Exception {
         searchService.findLocalBreweries(GEOCODE.getLatitude(), GEOCODE.getLongitude());
     }
-
+    @Test
+    public void findLocalBreweries1() throws Exception {
+        searchService.findLocalBreweries(51.742503, 19.432956);
+    }
+    @Test
+    public void findLocalBreweries2() throws Exception {
+        searchService.findLocalBreweries(51.355468, 11.100790);
+    }
+    @Test
+    public void findLocalBreweries3() throws Exception {
+        searchService.findLocalBreweries(51.742503, 19.432956);
+    }
 }

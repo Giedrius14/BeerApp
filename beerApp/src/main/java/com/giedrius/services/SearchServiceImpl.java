@@ -30,8 +30,9 @@ public class SearchServiceImpl implements SearchService{
         setHome(startLat, startLng);
         if(homeNotNull()) {
             breweries = getClosestBreweriesFromHome();
-            GeoCode temp = breweries.get(0);
+            GeoCode temp = breweries.size()>0? breweries.get(0): null;
             List<GeoCode> result = new ArrayList<>();
+            if(temp !=null)
             result.add(temp);
             getResultList(breweries, temp, result);
             printService.printResult(result, home);
