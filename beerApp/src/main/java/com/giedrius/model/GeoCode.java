@@ -28,4 +28,9 @@ public class GeoCode {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+    public GeoCode(Double latitude, Double longitude,Double distance){
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.distance = distance;
+    }
 }
