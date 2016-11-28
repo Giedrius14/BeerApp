@@ -37,6 +37,7 @@ public class BeerAppApplication {
 		 startLng = 19.432956;*/
 	/*	startLat = 51.355468; // randa 12 fact ir 36 beer  211ms
 		startLng = 11.100790;*/
+		startLat = 51.742503; // randa 11 fact ir 18 beer  326ms
 		startLng = 19.432956;
 		long startTime = System.nanoTime();
 		searchService.findLocalBreweries(startLat, startLng);
