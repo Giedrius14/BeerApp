@@ -30,10 +30,8 @@ public class CalculationServiceIT extends BeerAppIT {
 
     @Test
     public void distance() throws Exception {
-//        calculationService.distance();
+        Assert.assertEquals(620.9,calculationService.distance(getHome().getLatitude(),getHome().getLongitude(),15d,15d),0.1);
     }
-
-
 
     @Test
     public void getDistanceSum() throws Exception {
@@ -44,5 +42,4 @@ public class CalculationServiceIT extends BeerAppIT {
     public void getTotalDistanceSum() throws Exception {
         Assert.assertEquals(40d,calculationService.getTotalDistanceSum(getBreweries(),getHome()),0);
     }
-
 }
