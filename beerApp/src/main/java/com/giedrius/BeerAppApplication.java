@@ -1,6 +1,6 @@
 package com.giedrius;
 
-import com.giedrius.services.SearchServiceImpl;
+import com.giedrius.services.SearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class BeerAppApplication {
 
 	@Autowired
-	private SearchServiceImpl searchService;
+	private SearchService searchService;
 
 	private Double startLat,startLng;
 
@@ -35,9 +35,10 @@ public class BeerAppApplication {
 
 /*		 startLat = 51.742503; // 11 ir 18
 		 startLng = 19.432956;*/
+	/*	startLat = 51.355468; // randa 12 fact ir 36 beer  211ms
+		startLng = 11.100790;*/
 		startLat = 51.355468; // randa 12 fact ir 36 beer  211ms
 		startLng = 11.100790;
-
 		long startTime = System.nanoTime();
 		searchService.findLocalBreweries(startLat, startLng);
 		long endTime = System.nanoTime();

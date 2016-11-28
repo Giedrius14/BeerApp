@@ -12,7 +12,7 @@ import java.util.List;
  * Created by User on 2016.11.27.
  */
 @Service
-public class SearchServiceImpl {
+public class SearchServiceImpl implements SearchService{
     public static final int LIMIT_DISTANCE_FROM_HOME = 1500;
     public static final int LIMIT_RESULT_SIZE = 30;
     @Autowired
