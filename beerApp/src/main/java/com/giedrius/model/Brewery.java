@@ -27,4 +27,10 @@ public class Brewery {
     private String description;
     private Integer addUser;
     private Date lastModified;
+
+    public Brewery() {
+    }
+
+    public Brewery(Long id, String name, String address1, String address2, String city, String state, String code, String country, String phone, String website, String filepath, String description, Integer addUser, Date lastModified) {
+    }
 }

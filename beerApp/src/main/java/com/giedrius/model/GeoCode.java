@@ -33,4 +33,13 @@ public class GeoCode {
         this.longitude = longitude;
         this.distance = distance;
     }
+
+    public GeoCode(Long id, Brewery brewery, Double latitude, Double longitude, String accuracy, Double distance) {
+        this.id = id;
+        this.brewery = brewery;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.accuracy = accuracy;
+        this.distance = distance;
+    }
 }

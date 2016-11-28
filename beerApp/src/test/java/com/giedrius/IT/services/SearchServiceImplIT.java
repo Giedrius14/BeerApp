@@ -5,6 +5,8 @@ import com.giedrius.services.SearchService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static com.giedrius.fixtures.GeoCodeFixtures.GEOCODE;
+
 /**
  * Created by gsvazinskas on 11/28/2016.
  */
@@ -14,7 +16,7 @@ public class SearchServiceImplIT extends BeerAppIT {
 
     @Test
     public void findLocalBreweries() throws Exception {
-        searchService.findLocalBreweries(getHome().getLatitude(),getHome().getLongitude());
+        searchService.findLocalBreweries(GEOCODE.getLatitude(), GEOCODE.getLongitude());
     }
 
 }

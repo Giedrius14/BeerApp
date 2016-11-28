@@ -5,6 +5,9 @@ import com.giedrius.services.PrintService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static com.giedrius.fixtures.GeoCodeFixtures.GEOCODE;
+import static com.giedrius.fixtures.GeoCodeFixtures.GEOCODE_LIST;
+
 /**
  * Created by gsvazinskas on 11/28/2016.
  */
@@ -14,7 +17,7 @@ public class PrintServiceIT extends BeerAppIT {
 
     @Test
     public void printResult() throws Exception {
-        printService.printResult(getBreweries(),getHome()); //TODO Fix need ID
+        printService.printResult(GEOCODE_LIST, GEOCODE);
     }
 
 }
