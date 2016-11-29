@@ -17,11 +17,9 @@ public class BeerAppApplication {
 
 	@Autowired
 	private SearchService searchService;
-	private Double startLat,startLng;
 
+	private Double startLat,startLng;
 	private Boolean exit = false;
-	long startTime = 0;
-	long endTime = 0;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BeerAppApplication.class, args);
@@ -47,9 +45,9 @@ public class BeerAppApplication {
 	}
 
 	private void startSearch() {
-		startTime = System.nanoTime();
+		long startTime = System.nanoTime();
 		searchService.findLocalBreweries(startLat, startLng);
-		endTime = System.nanoTime();
+		long endTime = System.nanoTime();
 		System.out.printf("Program took: %d ms \n", (endTime - startTime)/1000000 );
 		promtExit();
 	}

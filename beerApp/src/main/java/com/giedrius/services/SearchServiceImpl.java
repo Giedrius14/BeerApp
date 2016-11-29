@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Service
 public class SearchServiceImpl implements SearchService{
-    public static final int LIMIT_DISTANCE_FROM_HOME = 1500;
+    public static final int LIMIT_DISTANCE_FROM_HOME = 1000;
     public static final int LIMIT_RESULT_SIZE = 30;
     @Autowired
     private GeoCodeRepository geoCodeRepository;
