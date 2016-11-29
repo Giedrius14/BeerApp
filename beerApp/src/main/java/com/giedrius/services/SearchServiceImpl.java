@@ -52,6 +52,7 @@ public class SearchServiceImpl implements SearchService{
             closest = getClosestBrewery(tmpBrewery,breweries);
             result.add(closest);
             breweries.remove(closest);
+            tmpBrewery = closest;
             if (ifResultDistanceIsOverTheLimit(breweries, result))
                 break;
         }
