@@ -10,6 +10,7 @@ import java.util.List;
 public interface CalculationService {
     double distance(double lat1, double lon1, double lat2, double lon2);
 
-     double getDistanceSum(List<GeoCode> result);
-     double getTotalDistanceSum(List<GeoCode> result,GeoCode home);
+    double getDistanceSum(List<GeoCode> result);
+    double getTotalDistanceSum(List<GeoCode> result,GeoCode home);
+    double getDistanceToHome(List<GeoCode> result, GeoCode home);
 }
